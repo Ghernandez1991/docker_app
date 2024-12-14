@@ -1,46 +1,116 @@
+
+
 from flask import Flask, jsonify, render_template
-import plotly.graph_objects as go
-
-
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine, MetaData, Table
+from sqlalchemy.orm import Session
+import sqlite3
+import pandas as pd
+import os
 app = Flask(__name__)
 
-# Define a simple route
-@app.route('/')
-def home():
-    return jsonify({"message": "Hello, World! Welcome to Flask on localhost:8080!. Is this thing working?"})
+
+# create SQLlite connection
+# app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///executions.sqlite"
+
+# Create DB classes for SQLAlchemy
+
+db = SQLAlchemy(app)
+class County(db.Model):
+    __tablename__ = 'county'
+
+    Index = db.Column(db.Integer)
+    County = db.Column(db.String, primary_key=True)
+    Count = db.Column(db.Integer)
+
+    def __repr__(self):
+        return '<County %r>' % (self.Index)
 
 
-@app.route('/pie-chart')
-def pie_chart():
-    # Data for the pie chart
-    labels = ['Apples', 'Bananas', 'Cherries', 'Dates']
-    values = [450, 300, 150, 100]
-    
-    # Create the pie chart using Plotly
-    fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
-    
-    # Convert the plotly figure to JSON for rendering in the frontend
-    return jsonify(fig.to_dict())
+class Offender(db.Model):
+    __tablename__ = 'offender'
 
-@app.route('/pie-chart-html')
-def pie_chart_html():
-    # Data for the pie chart
-    labels = ['Apples', 'Bananas', 'Cherries', 'Dates', 'Pizza']
-    values = [450, 300, 150, 100, 5000]
-    
-    # Create the pie chart using Plotly
-    fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
-    
-    # Convert the figure to HTML
-    graph_html = fig.to_html(full_html=False)
-    
-    return render_template('chart.html', graph_html=graph_html)
+    Index = db.Column(db.Integer)
+    Execution = db.Column(db.Integer, primary_key=True)
+    Link = db.Column(db.String)
+    Last_Name = db.Column(db.String)
+    First_Name = db.Column(db.String)
+    TDCJ = db.Column(db.Integer)
+    Age = db.Column(db.Integer)
+    Date = db.Column(db.Date)
+    Race = db.Column(db.String)
+    County = db.Column(db.String)
 
-# Another example route
-@app.route('/api/data')
-def api_data():
-    return jsonify({"data": [1, 2, 3, 4, 5]})
+    def __repr__(self):
+        return '<Offender %r>' % (self.Index)
 
-if __name__ == '__main__':
-    # Run the Flask app on localhost at port 8080
+
+class Words(db.Model):
+    __tablename__ = 'words'
+
+    Index = db.Column(db.Integer, primary_key=True)
+    Most_Spoken_Words = db.Column(db.String)
+    Count_of_Words = db.Column(db.Integer)
+
+    def __repr__(self):
+        return '<Words %r>' % (self.Index)
+
+# create Flask Routes
+@app.route("/",  methods=["GET"])
+def pie():
+    import random
+    offender_df = pd.read_sql_table(
+        'offender', 'sqlite:///executions.sqlite')
+
+    global offender_dictionary
+    offender_dictionary = offender_df.to_dict('index')
+    random_offender = random.choice(list(offender_dictionary.values()))
+
+    return render_template('pie.html', random_offender=random_offender)
+
+
+@app.route("/words")
+def words():
+
+    words_df = pd.read_sql_table(
+        'words', 'sqlite:///executions.sqlite')
+
+    # words_df.head()
+
+    list_of_words = words_df['Most_Spoken_Words'].to_list()
+    count_of_words = words_df['Count_of_Words'].to_list()
+
+    words_dictionary = {"Most_Spoken_Words": list_of_words,
+                        "Count_of_Words": count_of_words}
+
+    return jsonify(words_dictionary)
+
+
+@app.route("/county")
+def county():
+    county_df = pd.read_sql_table(
+        'county', 'sqlite:///executions.sqlite')
+    county_df = county_df.drop(['index'], axis=1)
+
+    county_dictionary = county_df.to_dict('records')
+
+    return jsonify(county_dictionary)
+
+
+@app.route("/offenders")
+def index():
+
+    offender_df = pd.read_sql_table(
+        'offender', 'sqlite:///executions.sqlite')
+
+    offender_df.head()
+    global offender_dictionary
+    offender_dictionary = offender_df.to_dict('index')
+
+    return jsonify(offender_dictionary)
+
+
+if __name__ == "__main__":
+
     app.run(host='0.0.0.0', port=8080, debug=True)
