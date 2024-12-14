@@ -1,4 +1,6 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
+import plotly.graph_objects as go
+
 
 app = Flask(__name__)
 
@@ -6,6 +8,33 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return jsonify({"message": "Hello, World! Welcome to Flask on localhost:8080!. Is this thing working?"})
+
+
+@app.route('/pie-chart')
+def pie_chart():
+    # Data for the pie chart
+    labels = ['Apples', 'Bananas', 'Cherries', 'Dates']
+    values = [450, 300, 150, 100]
+    
+    # Create the pie chart using Plotly
+    fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
+    
+    # Convert the plotly figure to JSON for rendering in the frontend
+    return jsonify(fig.to_dict())
+
+@app.route('/pie-chart-html')
+def pie_chart_html():
+    # Data for the pie chart
+    labels = ['Apples', 'Bananas', 'Cherries', 'Dates']
+    values = [450, 300, 150, 100]
+    
+    # Create the pie chart using Plotly
+    fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
+    
+    # Convert the figure to HTML
+    graph_html = fig.to_html(full_html=False)
+    
+    return render_template('chart.html', graph_html=graph_html)
 
 # Another example route
 @app.route('/api/data')
