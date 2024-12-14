@@ -8,55 +8,21 @@ import sqlite3
 import pandas as pd
 import os
 from pathlib  import Path
+from src.models import db, County, Offender, Words
+
 app = Flask(__name__)
+
 
 db_path = Path('/app/data/executions.sqlite')
 full_db_path =f"sqlite:///{db_path}"
-# create SQLlite connection
-# app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = full_db_path
 
-# Create DB classes for SQLAlchemy
+app.config['SQLALCHEMY_DATABASE_URI'] = full_db_path
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False 
+
+
 
 db = SQLAlchemy(app)
-class County(db.Model):
-    __tablename__ = 'county'
 
-    Index = db.Column(db.Integer)
-    County = db.Column(db.String, primary_key=True)
-    Count = db.Column(db.Integer)
-
-    def __repr__(self):
-        return '<County %r>' % (self.Index)
-
-
-class Offender(db.Model):
-    __tablename__ = 'offender'
-
-    Index = db.Column(db.Integer)
-    Execution = db.Column(db.Integer, primary_key=True)
-    Link = db.Column(db.String)
-    Last_Name = db.Column(db.String)
-    First_Name = db.Column(db.String)
-    TDCJ = db.Column(db.Integer)
-    Age = db.Column(db.Integer)
-    Date = db.Column(db.Date)
-    Race = db.Column(db.String)
-    County = db.Column(db.String)
-
-    def __repr__(self):
-        return '<Offender %r>' % (self.Index)
-
-
-class Words(db.Model):
-    __tablename__ = 'words'
-
-    Index = db.Column(db.Integer, primary_key=True)
-    Most_Spoken_Words = db.Column(db.String)
-    Count_of_Words = db.Column(db.Integer)
-
-    def __repr__(self):
-        return '<Words %r>' % (self.Index)
 
 # create Flask Routes
 @app.route("/",  methods=["GET"])
