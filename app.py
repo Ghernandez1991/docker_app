@@ -7,12 +7,14 @@ from sqlalchemy.orm import Session
 import sqlite3
 import pandas as pd
 import os
+from pathlib  import Path
 app = Flask(__name__)
 
-
+db_path = Path('/app/data/executions.sqlite')
+full_db_path =f"sqlite:///{db_path}"
 # create SQLlite connection
 # app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///executions.sqlite"
+app.config['SQLALCHEMY_DATABASE_URI'] = full_db_path
 
 # Create DB classes for SQLAlchemy
 
@@ -61,7 +63,7 @@ class Words(db.Model):
 def pie():
     import random
     offender_df = pd.read_sql_table(
-        'offender', 'sqlite:///executions.sqlite')
+        'offender', full_db_path)
 
     global offender_dictionary
     offender_dictionary = offender_df.to_dict('index')
@@ -74,7 +76,7 @@ def pie():
 def words():
 
     words_df = pd.read_sql_table(
-        'words', 'sqlite:///executions.sqlite')
+        'words', full_db_path)
 
     # words_df.head()
 
@@ -90,7 +92,7 @@ def words():
 @app.route("/county")
 def county():
     county_df = pd.read_sql_table(
-        'county', 'sqlite:///executions.sqlite')
+        'county', full_db_path)
     county_df = county_df.drop(['index'], axis=1)
 
     county_dictionary = county_df.to_dict('records')
@@ -102,7 +104,7 @@ def county():
 def index():
 
     offender_df = pd.read_sql_table(
-        'offender', 'sqlite:///executions.sqlite')
+        'offender', full_db_path)
 
     offender_df.head()
     global offender_dictionary
