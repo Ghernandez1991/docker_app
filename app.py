@@ -25,8 +25,8 @@ def pie_chart():
 @app.route('/pie-chart-html')
 def pie_chart_html():
     # Data for the pie chart
-    labels = ['Apples', 'Bananas', 'Cherries', 'Dates']
-    values = [450, 300, 150, 100]
+    labels = ['Apples', 'Bananas', 'Cherries', 'Dates', 'Pizza']
+    values = [450, 300, 150, 100, 5000]
     
     # Create the pie chart using Plotly
     fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
