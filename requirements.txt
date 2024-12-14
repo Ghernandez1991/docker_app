@@ -2,3 +2,5 @@ flask
 plotly
 pandas
 flask_sqlalchemy
+pre-commit==4.0.1
+black==24.10.0
