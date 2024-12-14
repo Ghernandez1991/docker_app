@@ -2,11 +2,15 @@ FROM python:3.12.0-slim-bullseye
 
 # docker build -t my_image .
 # docker run -d -p 8080:8080 my_image
-WORKDIR /app
-
-COPY . /app
-
+#install only requirements.txt so we can cache this layer
+WORKDIR /temp/requirements_temp
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+
+
+WORKDIR /app
+#copy source code to app
+COPY . /app
 
 EXPOSE 8080
 
