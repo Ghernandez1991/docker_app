@@ -11,8 +11,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 WORKDIR /app
 #copy source code to app
 COPY . /app
-
-EXPOSE 8080
+#can only use this locally- heroku does not support docker EXPOSE command
+# EXPOSE 8080
 
 
 ENTRYPOINT ["python"]

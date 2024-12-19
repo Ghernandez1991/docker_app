@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
 from pathlib import Path
 from dash_app import create_dash_app
+import os
 
 server = Flask(__name__)
 
@@ -87,5 +88,8 @@ def offenders():
 
 
 if __name__ == "__main__":
-
-    server.run(host="0.0.0.0", port=8080, debug=True)
+    # use this for local dev
+    # host="0.0.0.0", port=8080, debug=True
+    # use this for heroku.
+    # It will dynamically assign a port using the port env var
+    server.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8050)))
