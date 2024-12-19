@@ -23,7 +23,6 @@ def pie():
 
     offender_df = pd.read_sql_table("offender", full_db_path)
 
-    global offender_dictionary
     offender_dictionary = offender_df.to_dict("index")
     random_offender = random.choice(list(offender_dictionary.values()))
 
@@ -63,8 +62,6 @@ def index():
 
     offender_df = pd.read_sql_table("offender", full_db_path)
 
-    offender_df.head()
-    global offender_dictionary
     offender_dictionary = offender_df.to_dict("index")
 
     return jsonify(offender_dictionary)
