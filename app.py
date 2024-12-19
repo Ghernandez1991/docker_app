@@ -2,34 +2,53 @@ from flask import Flask, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
 from pathlib import Path
+from dash_app import create_dash_app
 
-app = Flask(__name__)
+server = Flask(__name__)
 
+# Integrate Dash app with Flask
+create_dash_app(server)
 
 db_path = Path("/app/data/executions.sqlite")
 full_db_path = f"sqlite:///{db_path}"
 
-app.config["SQLALCHEMY_DATABASE_URI"] = full_db_path
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+server.config["SQLALCHEMY_DATABASE_URI"] = full_db_path
+server.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(server)
+
+# Dash layout with a static pie chart
 
 
-# create Flask Routes
-@app.route("/", methods=["GET"])
-def pie():
+# Flask route for the homepage
+@server.route("/")
+def index():
     import random
 
     offender_df = pd.read_sql_table("offender", full_db_path)
 
     offender_dictionary = offender_df.to_dict("index")
     random_offender = random.choice(list(offender_dictionary.values()))
+    return render_template(
+        "index.html", random_offender=random_offender
+    )  # A simple Flask homepage
 
-    return render_template("pie.html", random_offender=random_offender)
+
+# create Flask Routes
+# @server.route("/", methods=["GET"])
+# def pie():
+#     import random
+
+#     offender_df = pd.read_sql_table("offender", full_db_path)
+
+#     offender_dictionary = offender_df.to_dict("index")
+#     random_offender = random.choice(list(offender_dictionary.values()))
+
+#     return render_template("pie.html", random_offender=random_offender)
 
 
-@app.route("/words")
+@server.route("/words")
 def words():
 
     words_df = pd.read_sql_table("words", full_db_path)
@@ -47,7 +66,7 @@ def words():
     return jsonify(words_dictionary)
 
 
-@app.route("/county")
+@server.route("/county")
 def county():
     county_df = pd.read_sql_table("county", full_db_path)
     county_df = county_df.drop(["index"], axis=1)
@@ -57,8 +76,8 @@ def county():
     return jsonify(county_dictionary)
 
 
-@app.route("/offenders")
-def index():
+@server.route("/offenders")
+def offenders():
 
     offender_df = pd.read_sql_table("offender", full_db_path)
 
@@ -69,4 +88,4 @@ def index():
 
 if __name__ == "__main__":
 
-    app.run(host="0.0.0.0", port=8080, debug=True)
+    server.run(host="0.0.0.0", port=8080, debug=True)
