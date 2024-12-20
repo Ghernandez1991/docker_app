@@ -6,6 +6,7 @@ from dash_app.dash_app import create_dash_app, create_links
 import os
 import sqlite3
 
+
 server = Flask(__name__)
 
 # Integrate Dash app with Flask
@@ -38,6 +39,9 @@ def index():
         f"{base_url}?q={first_name + " " + last_name + " " + "texas death row"}"  # noqa
     )
     tdcj_link = f"https://www.tdcj.texas.gov/death_row/dr_info/{last_name_for_tdcj}{first_name}last.html"  # noqa
+    # ep = EndPoints()
+    # tdcj_link, random_offender, formatted_url, last_name_for_tdcj = ep.index_method() # noqa
+
     return render_template(
         "index.html",
         random_offender=random_offender,
