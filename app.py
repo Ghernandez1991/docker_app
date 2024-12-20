@@ -19,8 +19,6 @@ server.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(server)
 
-# Dash layout with a static pie chart
-
 
 # Flask route for the homepage
 @server.route("/")
@@ -31,22 +29,17 @@ def index():
 
     offender_dictionary = offender_df.to_dict("index")
     random_offender = random.choice(list(offender_dictionary.values()))
+    base_url = "https://www.google.com/search"
+    first_name = random_offender.get("First_Name")
+    last_name = random_offender.get("Last_Name")
+    formatted_url = (
+        f"{base_url}?q={first_name + " " + last_name + " " + "texas death row"}"  # noqa
+    )
     return render_template(
-        "index.html", random_offender=random_offender
-    )  # A simple Flask homepage
-
-
-# create Flask Routes
-# @server.route("/", methods=["GET"])
-# def pie():
-#     import random
-
-#     offender_df = pd.read_sql_table("offender", full_db_path)
-
-#     offender_dictionary = offender_df.to_dict("index")
-#     random_offender = random.choice(list(offender_dictionary.values()))
-
-#     return render_template("pie.html", random_offender=random_offender)
+        "index.html",
+        random_offender=random_offender,
+        formatted_url=formatted_url,  # noqa
+    )
 
 
 @server.route("/words")
