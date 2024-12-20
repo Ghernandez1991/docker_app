@@ -2,7 +2,7 @@ from flask import Flask, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
 from pathlib import Path
-from dash_app import create_dash_app
+from dash_app.dash_app import create_dash_app
 import os
 
 server = Flask(__name__)
