@@ -32,7 +32,7 @@
     <!-- Top Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
         <a class="navbar-brand" href="#">
-            <font color="red">Texas Death Row Dashboard</font>
+            <font color="red">Texas Death Row Endpoints</font>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -58,8 +58,12 @@
         <h1 class="text-center">Welcome to Flask + Dash</h1>
         <p class="text-center">Check out the <a href="/dashboard/">Pie Chart Dashboard</a>.</p>
 
+
+    </div>
+
+
+    <div class="container-fluid">
         <div class="row no-gutter">
-            <!-- Offender Information (left side) -->
             <div class="col-lg-2">
                 <p>Offender of the Day</p>
                 <ol>First Name: {{random_offender.First_Name}}</ol>
@@ -68,22 +72,13 @@
                 <ol>Race: {{random_offender.Race}}</ol>
                 <ol>County: {{random_offender.County}}</ol>
                 <ol>Execution Date: {{random_offender.Date}}</ol>
-                <ol>Google Link: <a href="{{formatted_url}}" target="_blank">Link</a></ol>
+                <ol>Search the Offender on Google: <a href="{{formatted_url}}" target="_blank">Link</a></ol>
                 <ol>Texas Department of Criminal Justice: <a href="{{tdcj_link}}" target="_blank">Last Statement</a></ol>
-                <ol>formatted last name: {{last_name_for_tdcj}}</ol>
-            </div>
-
-            <!-- Pie Chart (center) -->
-            <div class="col-lg-5">
-                <div id="graph" style="background-color: #000105; height: 500px;"></div>
-            </div>
-
-            <!-- Additional Chart (right side) -->
-            <div class="col-lg-5">
-                <div id="tester" style="background-color: #000105; height: 500px;"></div>
             </div>
         </div>
     </div>
+
+
 
     <!-- Bootstrap JS and Popper (for navbar toggle) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
