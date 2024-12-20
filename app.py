@@ -2,8 +2,9 @@ from flask import Flask, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 import pandas as pd
 from pathlib import Path
-from dash_app.dash_app import create_dash_app
+from dash_app.dash_app import create_dash_app, create_links
 import os
+import sqlite3
 
 server = Flask(__name__)
 
@@ -55,11 +56,9 @@ def words():
 
     list_of_words = words_df["Most_Spoken_Words"].to_list()
     count_of_words = words_df["Count_of_Words"].to_list()
-
-    words_dictionary = {
-        "Most_Spoken_Words": list_of_words,
-        "Count_of_Words": count_of_words,
-    }
+    words_dictionary = {}
+    for i, value in enumerate(list_of_words):
+        words_dictionary[i] = {value: count_of_words[i]}
 
     return jsonify(words_dictionary)
 
@@ -82,6 +81,40 @@ def offenders():
     offender_dictionary = offender_df.to_dict("index")
 
     return jsonify(offender_dictionary)
+
+
+@server.route("/final_statements")
+def final_statements():
+    list_of_statements = create_links()
+
+    return jsonify(list_of_statements)
+
+
+@server.route("/racial_percentages")
+def racial_percentages():
+    with open("/app/sql/percentage.sql") as file:
+        query = file.read()
+
+    # Connect to the SQLite database
+    conn = sqlite3.connect("/app/data/executions.sqlite")
+
+    # Create a cursor object
+    cursor = conn.cursor()
+
+    # Execute the query
+    cursor.execute(query)
+
+    results = cursor.fetchall()
+
+    list_of_dicts = []
+    for row in results:
+        dictionary_row = {
+            "Race": row[0],
+            "Total_Executions": row[1],
+            "Percentage": row[2],
+        }
+        list_of_dicts.append(dictionary_row)
+    return jsonify(list_of_dicts)
 
 
 if __name__ == "__main__":
