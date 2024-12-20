@@ -15,15 +15,66 @@
         }
         .navbar {
             background-color: #f8f9fa;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow to match the navbar */
         }
         .navbar a {
             color: red;
+            padding: 10px 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 8px;
+        }
+        .navbar a:hover {
+            background-color: #d9534f;
+            color: white;
         }
         .navbar-brand font {
             color: red;
         }
         .container {
             margin-top: 20px;
+        }
+
+        /* Offender section styling */
+        .offender-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .offender-section h3 {
+            color: #d9534f; /* Red color */
+            font-size: 1.5em;
+        }
+
+        .offender-section ol {
+            font-size: 1.1em;
+            padding-left: 20px;
+        }
+
+        .offender-section a {
+            color: #007bff;
+        }
+
+        .offender-section a:hover {
+            text-decoration: underline;
+        }
+
+        .endpoint-link {
+            font-size: 1.2em;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .endpoint-link:hover {
+            text-decoration: underline;
+        }
+
+        .container-fluid {
+            padding-left: 10px;
+            padding-right: 10px;
         }
     </style>
 </head>
@@ -41,13 +92,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/words"><font color="red">Most Common Final Words</font></a>
+                    <a class="nav-link" href="/words">Most Common Final Words </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/offenders"><font color="red">Executed Offenders</font></a>
+                    <a class="nav-link" href="/offenders">Executed Offenders</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/county"><font color="red">Most Active Counties by Executions</font></a>
+                    <a class="nav-link" href="/county">Most Active Counties by Executions</a>
                 </li>
             </ul>
         </div>
@@ -57,28 +108,27 @@
     <div class="container">
         <h1 class="text-center">Welcome to Flask + Dash</h1>
         <p class="text-center">Check out the <a href="/dashboard/">Pie Chart Dashboard</a>.</p>
-
-
     </div>
 
 
+    <!-- Offender Section -->
     <div class="container-fluid">
         <div class="row no-gutter">
-            <div class="col-lg-2">
-                <p>Offender of the Day</p>
-                <ol>First Name: {{random_offender.First_Name}}</ol>
-                <ol>Last Name: {{random_offender.Last_Name}}</ol>
-                <ol>Age: {{random_offender.Age}}</ol>
-                <ol>Race: {{random_offender.Race}}</ol>
-                <ol>County: {{random_offender.County}}</ol>
-                <ol>Execution Date: {{random_offender.Date}}</ol>
-                <ol>Search the Offender on Google: <a href="{{formatted_url}}" target="_blank">Link</a></ol>
-                <ol>Texas Department of Criminal Justice: <a href="{{tdcj_link}}" target="_blank">Last Statement</a></ol>
+            <div class="col-lg-3">
+                <div class="offender-section">
+                    <h3>Offender of the Day</h3>
+                    <ol><strong>First Name:</strong> {{random_offender.First_Name}}</ol>
+                    <ol><strong>Last Name:</strong> {{random_offender.Last_Name}}</ol>
+                    <ol><strong>Age:</strong> {{random_offender.Age}}</ol>
+                    <ol><strong>Race:</strong> {{random_offender.Race}}</ol>
+                    <ol><strong>County:</strong> {{random_offender.County}}</ol>
+                    <ol><strong>Execution Date:</strong> {{random_offender.Date}}</ol>
+                    <ol><strong>Search the Offender on Google:</strong> <a href="{{formatted_url}}" target="_blank">Link</a></ol>
+                    <ol><strong>Texas Department of Criminal Justice:</strong> <a href="{{tdcj_link}}" target="_blank">Last Statement</a></ol>
+                </div>
             </div>
         </div>
     </div>
-
-
 
     <!-- Bootstrap JS and Popper (for navbar toggle) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
